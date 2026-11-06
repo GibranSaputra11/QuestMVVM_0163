@@ -26,6 +26,8 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 #
+lifescycle-viewmodel-compose = {module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.11.0"}
+lifecycle-runtime-compose = {module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.11.0"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
