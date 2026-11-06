@@ -6,10 +6,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ktp.praktikum8.model.DataJK.JenisK
+import com.ktp.praktikum8.view.FormSiswa
+import com.ktp.praktikum8.view.TampilSiswa
 import com.ktp.praktikum8.viewmodel.SiswaViewModel
 
 enum class Navigasi {
@@ -22,7 +27,7 @@ enum class Navigasi {
 fun SiswaApp(
     modifier: Modifier,
     viewModel: SiswaViewModel = viewModel(),
-    navController : NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ){
     Scaffold{ isiRuang ->
         //edit 2 : tambahkan variabel uiState
@@ -31,8 +36,32 @@ fun SiswaApp(
             navController = navController,
             startDestination = Navigasi.Formulir.name,
             modifier = Modifier.padding(isiRuang)
-        ){}
+        ){
+            composable(route = Navigasi.Formulir.name){
+                //edit 3 : tambahkan variabel konteks
+                val konteks = LocalContext.current
+                FormSiswa(
+                    //edit 4 : parameter pilihanJK dan onSubmitButtonClicked
+                    pilihanJK = JenisK.map { id-> konteks.resources.getString(id) },
+                    onSubmitButtonClicked = {
+                        viewModel.setSiswa(it)
+                        navController.navigate(Navigasi.Detail.name)
+                    }
+                )
+            }
+            composable(route = Navigasi.Detail.name){
+                TampilSiswa(
+                    //edit 5 : parameter statusUiSiswa
+                    statusUiSiswa = uiState.value,
+                    onBackButtonClicked = { cancelAndBackToFormulir(navController) }
+                )
+            }
+        }
 
     }
-
+}
+private fun cancelAndBackToFormulir(
+    navController: NavHostController
+) {
+    navController.popBackStack(Navigasi.Formulir.name, inclusive = false)
 }
